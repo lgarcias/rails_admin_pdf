@@ -25,6 +25,25 @@ module RailsAdmin
         register_instance_option :link_icon do
           'icon-folder-open'
         end
+
+        # display only for models with Report class
+        register_instance_option :visible? do
+          # test if class exists 
+          # (dirty way because of autoload)
+          begin
+            "#{bindings[:object].class}Report".constantize
+            class_exists = true 
+          rescue
+            class_exists = false
+          end
+
+          class_exists && authorized?
+        end
+
+        # disable turbolinks. send_data does not work with it
+        register_instance_option :pjax? do
+          false
+        end
       end
     end
   end
